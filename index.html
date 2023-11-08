@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="./favicon/favicon.ico">
+    <title>shengji</title>
+</head>
+
+<body>
+    <!-- Following https://developer.mozilla.org/en-US/docs/Learn/Forms/How_to_structure_a_web_form -->
+    <form id="addPlayer" autocomplete="off">
+        <h1>add player</h1>
+        <p>
+            <label for="name">
+                <span>Name:</span>
+            </label>
+            <input type="text" name="name" id="name" required />
+        </p>
+        <p>
+            <label for="level">
+                <span>Level:</span>
+            </label>
+            <input type="number" name="level" id="level" value=2 required />
+        </p>
+        <p>
+            <label for="staged">
+                <span>Staged:</span>
+            </label>
+            <input type="checkbox" name="staged" id="staged" />
+        </p>
+        <p>
+            <label for="prestige">
+                <span>Prestige:</span>
+            </label>
+            <input type="number" name="prestige" id="prestige" value=0 required />
+        </p>
+
+        <p><button type="submit">add</button></p>
+    </form>
+
+    <form id="recordGame" autocomplete="off">
+        <h1>record game</h1>
+        <fieldset>
+            <legend>Players</legend>
+            <ul id="playerList">
+            </ul>
+        </fieldset>
+
+        <p><button type="submit">record</button></p>
+    </form>
+
+
+
+    <script src="./firebase.js" type="module"></script>
+    <script src="./main.js" type="module"></script>
+</body>
+
+</html>
