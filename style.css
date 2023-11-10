@@ -1,7 +1,24 @@
+:root {
+    --bg-color: #121212;
+    --accent-color: #DD2E44;
+}
+
+body {
+    font-family: 'Noto Sans', sans-serif;
+    background-color: #121212;
+    color: #FFFFFF;
+}
+
+h1 {
+    color: var(--accent-color);
+}
+
 .players {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
+
+    height: 90vh;
 }
 
 .player p {
@@ -9,6 +26,19 @@
     font-weight: bold;
 }
 
-.games.staged {
+.player-name {
+    border-bottom: 1px solid #FFFFFF;
+}
+
+.game.staged {
     text-decoration: underline;
+}
+
+.game.empty {
+    color: var(--bg-color);
+}
+
+.forms {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 }

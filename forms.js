@@ -1,7 +1,7 @@
-import { addDoc, collection, getDocs, orderBy, query, doc, Timestamp } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 import { db } from "./firebase.js";
 
-async function createPlayer(formData) {
+export async function createPlayer(formData) {
     let staged = formData.get("staged");
     if (staged === null) {
         staged = false;
@@ -17,7 +17,7 @@ async function createPlayer(formData) {
     });
 }
 
-async function recordGame(formData) {
+export async function recordGame(formData) {
     let currentPlayers = [];
     let playerRefs = [];
     for (let name of Array.from(formData.keys())) {
@@ -60,7 +60,7 @@ async function recordGame(formData) {
 }
 
 let players = {};
-async function populatePlayersField() {
+export async function populatePlayersField() {
     const playerList = document.querySelector("#playerList");
 
     const querySnapshot = await getDocs(query(collection(db, "players"), orderBy("name", "desc")));
@@ -122,7 +122,7 @@ function addOrRemoveStageInput(checkbox) {
     stageList.insertAdjacentHTML("beforeend", HTML);
 }
 
-function setDateToNow() {
+export function setDateToNow() {
     // https://stackoverflow.com/a/60884408
     let now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
@@ -131,23 +131,4 @@ function setDateToNow() {
     now.setMilliseconds(null);
 
     document.getElementById('date').value = now.toISOString().slice(0, -1);
-}
-
-
-window.onload = async () => {
-    populatePlayersField();
-
-    const addPlayerForm = document.querySelector("#addPlayer");
-    addPlayerForm.addEventListener("submit", event => {
-        event.preventDefault();
-        createPlayer(new FormData(event.target));
-    });
-
-    const recordGameForm = document.querySelector("#recordGame");
-    recordGameForm.addEventListener("submit", event => {
-        event.preventDefault();
-        recordGame(new FormData(event.target));
-    })
-
-    setDateToNow();
 }
