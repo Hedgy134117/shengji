@@ -53,6 +53,19 @@ input[type="checkbox"] {
     height: 2em;
 }
 
+.header {
+    display: flex;
+}
+.header h1:first-child {
+    flex-grow: 1;
+}
+
+.header span {
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+    padding: 0 0.3em;
+}
+
 .players {
     display: grid;
     grid-auto-flow: column;
@@ -95,4 +108,14 @@ input[type="checkbox"] {
 .forms {
     display: grid;
     grid-template-columns: 1fr 1fr;
+}
+
+@media only screen and (max-width: 425px) {
+    .header {
+        flex-direction: column-reverse;
+    }
+
+    .header h1:last-child {
+        text-align: center;
+    }
 }
