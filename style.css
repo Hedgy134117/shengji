@@ -1,0 +1,14 @@
+.players {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 1fr;
+}
+
+.player p {
+    text-align: center;
+    font-weight: bold;
+}
+
+.games.staged {
+    text-decoration: underline;
+}
