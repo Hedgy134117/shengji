@@ -9,7 +9,7 @@ export async function createPlayer(formData) {
         staged = true;
     }
 
-    await addDoc(collection(db, "players"), {
+    return addDoc(collection(db, "players"), {
         name: formData.get("name"),
         level: parseInt(formData.get("level")),
         staged: staged,
@@ -51,7 +51,7 @@ export async function recordGame(formData) {
         staged: playerStaged
     });
 
-    await addDoc(collection(db, "games"), {
+    return addDoc(collection(db, "games"), {
         date: Timestamp.fromDate(new Date(formData.get("date"))),
         players: playerRefs,
         scores: playerScores,
@@ -62,6 +62,7 @@ export async function recordGame(formData) {
 let players = {};
 export async function populatePlayersField() {
     const playerList = document.querySelector("#playerList");
+    playerList.innerHTML = "";
 
     const querySnapshot = await getDocs(query(collection(db, "players"), orderBy("name", "desc")));
     querySnapshot.forEach((doc) => {
@@ -94,6 +95,7 @@ function addOrRemoveScoreInput(checkbox) {
     }
 
     // Add the score input
+    // TODO: make the default value whatever they currently have
     const HTML = `<li>
                 <label for="${checkbox.name}-score">
                     <span>${checkbox.name}</span>

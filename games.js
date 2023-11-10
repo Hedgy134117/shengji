@@ -4,6 +4,7 @@ import { db } from "./firebase.js";
 let allPlayerNames = [];
 export async function loadPlayers() {
     const playerList = document.querySelector(".players");
+    playerList.innerHTML = "";
 
     const querySnapshot = await getDocs(query(collection(db, "players"), orderBy("name", "desc")));
     querySnapshot.forEach((doc) => {
@@ -12,11 +13,15 @@ export async function loadPlayers() {
 
         const HTML = `<div class="player" data-name=${name}><p class="player-name">${name}</p></div>`;
         playerList.insertAdjacentHTML("afterbegin", HTML);
-        allPlayerNames.push(name);
+
+        if (!allPlayerNames.includes(name)) {
+            allPlayerNames.push(name);
+        }
     });
 }
 
 export async function loadGames() {
+    document.querySelectorAll(".game").forEach(el => el.remove());
     const querySnapshot = await getDocs(query(collection(db, "games"), orderBy("date", "desc")));
     querySnapshot.forEach(async (doc) => {
         const game = doc.data();

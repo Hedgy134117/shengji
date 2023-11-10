@@ -13,12 +13,51 @@ h1 {
     color: var(--accent-color);
 }
 
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+}
+
+li label {
+    flex-grow: 1;
+}
+
+input[type="text"],
+input[type="number"] {
+    padding: 0.25em;
+    width: 50%;
+}
+
+button {
+    width: 100%;
+    padding: 1em;
+    background-color: var(--accent-color);
+    color: #FFFFFF;
+    border-radius: 12px;
+    border: none;
+}
+
+input[type="checkbox"] {
+    width: 2em;
+    height: 2em;
+}
+
 .players {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: 1fr;
 
     height: 90vh;
+    overflow: auto;
+}
+
+.player {
+    min-width: 5em;
 }
 
 .player p {
@@ -30,12 +69,17 @@ h1 {
     border-bottom: 1px solid #FFFFFF;
 }
 
+.game {
+    border-bottom: 1px solid #202020;
+}
+
 .game.staged {
     text-decoration: underline;
 }
 
 .game.empty {
     color: var(--bg-color);
+    user-select: none;
 }
 
 .forms {
