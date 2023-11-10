@@ -30,5 +30,8 @@ window.onload = async () => {
         recordGame(new FormData(event.target)).then(reload);
     })
 
+    const setToNowButton = document.querySelector("#setToNow");
+    setToNowButton.addEventListener("click", setDateToNow);
+
     setDateToNow();
 }

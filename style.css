@@ -7,10 +7,16 @@ body {
     font-family: 'Noto Sans', sans-serif;
     background-color: #121212;
     color: #FFFFFF;
+    box-sizing: border-box;
 }
 
 h1 {
     color: var(--accent-color);
+}
+
+p {
+    margin: 0;
+    padding: 1em;
 }
 
 ul {
@@ -56,8 +62,12 @@ input[type="checkbox"] {
     overflow: auto;
 }
 
-.player {
+.player, .date {
     min-width: 5em;
+}
+
+.date {
+    border-right: 1px solid #FFFFFF;
 }
 
 .player p {
@@ -69,7 +79,7 @@ input[type="checkbox"] {
     border-bottom: 1px solid #FFFFFF;
 }
 
-.game {
+.game, .date {
     border-bottom: 1px solid #202020;
 }
 

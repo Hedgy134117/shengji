@@ -3,8 +3,9 @@ import { db } from "./firebase.js";
 
 let allPlayerNames = [];
 export async function loadPlayers() {
-    const playerList = document.querySelector(".players");
-    playerList.innerHTML = "";
+    let playerList = document.querySelector(".players");
+    playerList.querySelectorAll(".player").forEach(player => player.remove());
+    playerList = playerList.querySelector(".dates");
 
     const querySnapshot = await getDocs(query(collection(db, "players"), orderBy("name", "desc")));
     querySnapshot.forEach((doc) => {
@@ -12,7 +13,7 @@ export async function loadPlayers() {
         const name = player.name;
 
         const HTML = `<div class="player" data-name=${name}><p class="player-name">${name}</p></div>`;
-        playerList.insertAdjacentHTML("afterbegin", HTML);
+        playerList.insertAdjacentHTML("afterend", HTML);
 
         if (!allPlayerNames.includes(name)) {
             allPlayerNames.push(name);
@@ -22,6 +23,7 @@ export async function loadPlayers() {
 
 export async function loadGames() {
     document.querySelectorAll(".game").forEach(el => el.remove());
+    document.querySelectorAll(".date").forEach(el => el.remove());
     const querySnapshot = await getDocs(query(collection(db, "games"), orderBy("date", "desc")));
     querySnapshot.forEach(async (doc) => {
         const game = doc.data();
@@ -32,15 +34,19 @@ export async function loadGames() {
 async function loadGame(game) {
     console.log(game);
     let gamePlayers = await playerRefsToArray(game.players);
+    let gameDate = new Date(game.date.toDate().toLocaleString("en-US", { timeZone: "America/New_York" }));
+
+    let dateHTML = `<div class="date"><p>${gameDate.getMonth() + 1}/${gameDate.getDate()}/${gameDate.getFullYear()}</p></div>`;
+    document.querySelector(".dates").insertAdjacentHTML("beforeend", dateHTML);
 
     for (let playerName of allPlayerNames) {
         let gamePlayerFound = gamePlayers.find(player => player.name == playerName);
         if (gamePlayerFound !== undefined) {
             let i = gamePlayers.indexOf(gamePlayerFound);
-            const HTML = `<div class="game ${game.staged[i] ? 'staged' : ''}" data-time=${game.date.toDate().toISOString()}><p>${game.scores[i]}</p></div>`;
+            const HTML = `<div class="game ${game.staged[i] ? 'staged' : ''}" data-time=${gameDate.toISOString()}><p>${game.scores[i]}</p></div>`;
             document.querySelector(`[data-name=${playerName}]`).insertAdjacentHTML("beforeend", HTML);
         } else {
-            const HTML = `<div class="game empty" data-time=${game.date.toDate().toISOString()}><p>x</p></div>`;
+            const HTML = `<div class="game empty" data-time=${gameDate.toISOString()}><p>x</p></div>`;
             document.querySelector(`[data-name=${playerName}]`).insertAdjacentHTML("beforeend", HTML);
         }
     }

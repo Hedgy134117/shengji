@@ -15,6 +15,9 @@
 <body>
     <h1>players</h1>
     <div class="players">
+        <div class="dates">
+            <p class="player-name">Date</p>
+        </div>
     </div>
 
 
@@ -55,6 +58,7 @@
 
             <label for="date">Date:</label>
             <input type="datetime-local" name="date" id="date">
+            <button type="button" id="setToNow" onclick="setDateToNow();">set to now</button>
 
             <fieldset>
                 <legend>Players</legend>
