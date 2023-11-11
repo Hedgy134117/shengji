@@ -32,24 +32,30 @@ export async function loadGames() {
 }
 
 async function loadGame(game) {
-    console.log(game);
     let gamePlayers = await playerRefsToArray(game.players);
     let gameDate = new Date(game.date.toDate().toLocaleString("en-US", { timeZone: "America/New_York" }));
 
-    let dateHTML = `<div class="date"><p>${gameDate.getMonth() + 1}/${gameDate.getDate()}/${gameDate.getFullYear()}</p></div>`;
+    let dateHTML = `<div class="date" data-time=${gameDate.toISOString()}><p>${gameDate.getMonth() + 1}/${gameDate.getDate()}/${gameDate.getFullYear()}</p></div>`;
     document.querySelector(".dates").insertAdjacentHTML("beforeend", dateHTML);
 
     for (let playerName of allPlayerNames) {
         let gamePlayerFound = gamePlayers.find(player => player.name == playerName);
         if (gamePlayerFound !== undefined) {
             let i = gamePlayers.indexOf(gamePlayerFound);
-            const HTML = `<div class="game ${game.staged[i] ? 'staged' : ''}" data-time=${gameDate.toISOString()}><p>${game.scores[i]}</p></div>`;
+            const HTML = `<div class="game ${game.staged[i] ? 'staged' : ''}" data-time=${gameDate.toISOString()}><p>${scoreValueToString(game.scores[i])}</p></div>`;
             document.querySelector(`[data-name=${playerName}]`).insertAdjacentHTML("beforeend", HTML);
         } else {
             const HTML = `<div class="game empty" data-time=${gameDate.toISOString()}><p>x</p></div>`;
             document.querySelector(`[data-name=${playerName}]`).insertAdjacentHTML("beforeend", HTML);
         }
     }
+}
+
+function scoreValueToString(val) {
+    if (val <= 10) {
+        return val;
+    }
+    return { 11: "J", 12: "Q", 13: "K" }[val];
 }
 
 async function playerRefsToArray(players) {
@@ -62,9 +68,9 @@ async function playerRefsToArray(players) {
 }
 
 export async function sortGames() {
-    for (let playerContainer of document.querySelectorAll(".player")) {
+    for (let playerContainer of document.querySelectorAll(".player, .dates")) {
         // https://stackoverflow.com/a/51422477
-        let sorted = Array.from(playerContainer.querySelectorAll(".game")).sort((a, b) => {
+        let sorted = Array.from(playerContainer.querySelectorAll(".game, .date")).sort((a, b) => {
             return new Date(a.dataset.time).getTime() - new Date(b.dataset.time).getTime();
         });
         for (let game of playerContainer.querySelectorAll(".game")) {

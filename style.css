@@ -4,7 +4,8 @@
 }
 
 body {
-    font-family: 'Noto Sans', sans-serif;
+    /* font-family: 'Noto Sans', sans-serif; */
+    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
     background-color: #121212;
     color: #FFFFFF;
     box-sizing: border-box;
@@ -56,6 +57,7 @@ input[type="checkbox"] {
 .header {
     display: flex;
 }
+
 .header h1:first-child {
     flex-grow: 1;
 }
@@ -75,8 +77,9 @@ input[type="checkbox"] {
     overflow: auto;
 }
 
-.player, .date {
-    min-width: 5em;
+.player,
+.date {
+    min-width: 8em;
 }
 
 .date {
@@ -89,10 +92,14 @@ input[type="checkbox"] {
 }
 
 .player-name {
+    background-color: var(--bg-color);
     border-bottom: 1px solid #FFFFFF;
+    position: sticky;
+    top: 0;
 }
 
-.game, .date {
+.game,
+.date {
     border-bottom: 1px solid #202020;
 }
 
