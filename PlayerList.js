@@ -19,6 +19,15 @@ export class PlayerList {
         return null;
     }
 
+    static getPlayerIdByName(name) {
+        for (const id in PlayerList.players) {
+            if (PlayerList.players[id].name == name) {
+                return id;
+            }
+        }
+        return null;
+    }
+
     static getPlayerList() {
         return Object.values(PlayerList.players);
     }

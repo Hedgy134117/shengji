@@ -27,7 +27,7 @@ export async function recordGame(formData) {
         }
 
         currentPlayers.push(name);
-        playerRefs.push(doc(db, `players/${players[name]}`));
+        playerRefs.push(doc(db, `players/${PlayerList.getPlayerIdByName(name)}`));
     }
 
 
