@@ -1,4 +1,5 @@
-import { Timestamp, addDoc, collection, doc, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+import { Timestamp, addDoc, collection, doc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+import { PlayerList } from "./PlayerList.js";
 import { db } from "./firebase.js";
 
 export async function createPlayer(formData) {
@@ -44,13 +45,6 @@ export async function recordGame(formData) {
         }
     }
 
-    console.log({
-        date: Timestamp.fromDate(new Date(formData.get("date"))),
-        players: playerRefs,
-        scores: playerScores,
-        staged: playerStaged
-    });
-
     return addDoc(collection(db, "games"), {
         date: Timestamp.fromDate(new Date(formData.get("date"))),
         players: playerRefs,
@@ -59,18 +53,13 @@ export async function recordGame(formData) {
     });
 }
 
-let players = {};
-export async function populatePlayersField() {
+export function populatePlayersField() {
     const playerList = document.querySelector("#playerList");
     playerList.innerHTML = "";
 
-    const querySnapshot = await getDocs(query(collection(db, "players"), orderBy("name", "desc")));
-    querySnapshot.forEach((doc) => {
-        const player = doc.data();
+    const players = PlayerList.getPlayerList();
+    players.forEach(player => {
         const name = player.name;
-
-        players[name] = doc.id;
-
         const HTML = `<li>
                 <label for="${name}">
                     <span>${name}</span>

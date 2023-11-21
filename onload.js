@@ -1,22 +1,24 @@
+import { GameList } from "./GameList.js";
+import { PlayerList } from "./PlayerList.js";
 import { createPlayer, populatePlayersField, recordGame, setDateToNow } from "./forms.js";
 import { loadGames, loadPlayers, sortGames } from "./games.js";
 
-async function reload() {
-    await loadPlayers();
-    await loadGames();
-    // i hate async
-    setTimeout(() => {
-        sortGames();
-    }, 2000);
+function reload() {
+    loadPlayers();
+    loadGames();
+    sortGames();
 }
 
-async function reloadAndPopulate() {
+function reloadAndPopulate() {
     reload();
     populatePlayersField();
 }
 
 window.onload = async () => {
-    await reloadAndPopulate();
+    await PlayerList.initializePlayerList();
+    await GameList.initializeGameList();
+
+    reloadAndPopulate();
 
     const addPlayerForm = document.querySelector("#addPlayer");
     addPlayerForm.addEventListener("submit", event => {
