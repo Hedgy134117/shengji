@@ -10,7 +10,9 @@ export class GameList {
             querySnapshot.forEach(doc => {
                 const game = doc.data();
                 for (let i = 0; i < game.players.length; i++) {
-                    game.players[i] = PlayerList.getPlayerById(game.players[i].id);
+                    const id = game.players[i].id;
+                    game.players[i] = PlayerList.getPlayerById(id);
+                    PlayerList.addGameToPlayer(game, id);
                 }
                 GameList.games.push(game);
             });

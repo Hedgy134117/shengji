@@ -4,8 +4,8 @@
 }
 
 body {
-    /* font-family: 'Noto Sans', sans-serif; */
-    font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
+    /* font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif; */
     background-color: #121212;
     color: #FFFFFF;
     box-sizing: border-box;
@@ -68,11 +68,12 @@ input[type="checkbox"] {
     padding: 0 0.3em;
 }
 
-.players {
+.player {
     display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
+    grid-template-columns: 20% 40% 40%;
+}
 
+.players {
     height: 90vh;
     overflow: auto;
 }
@@ -84,18 +85,6 @@ input[type="checkbox"] {
 
 .date {
     border-right: 1px solid #FFFFFF;
-}
-
-.player p {
-    text-align: center;
-    font-weight: bold;
-}
-
-.player-name {
-    background-color: var(--bg-color);
-    border-bottom: 1px solid #FFFFFF;
-    position: sticky;
-    top: 0;
 }
 
 .game,

@@ -1,27 +1,37 @@
 import { collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
 import { db } from "./firebase.js";
+import { GameList } from "./GameList.js";
+import { Player } from "./Player.js";
 
 export class PlayerList {
-    static players = {};
+    static players = [];
 
     static async initializePlayerList() {
         return getDocs(query(collection(db, "players"), orderBy("name", "desc"))).then(querySnapshot => {
             querySnapshot.forEach(doc => {
-                PlayerList.players[doc.id] = doc.data();
+                const data = doc.data();
+                this.players.push(new Player(data["name"], data["level"], data["prestige"]))
             })
         })
     }
 
     static getPlayerById(id) {
-        if (id in PlayerList.players) {
-            return PlayerList.players[id];
+        for (let player of this.players) {
+            console.log(player + " " + id)
+            if (player.id === id) {
+                return player;
+            }
         }
         return null;
     }
 
+    static addGameToPlayer(game, playerId) {
+        this.getPlayerById(playerId).addGame(game);
+    }
+
     static getPlayerIdByName(name) {
-        for (const id in PlayerList.players) {
-            if (PlayerList.players[id].name == name) {
+        for (const player of this.players) {
+            if (player.name === name) {
                 return id;
             }
         }
@@ -29,6 +39,6 @@ export class PlayerList {
     }
 
     static getPlayerList() {
-        return Object.values(PlayerList.players);
+        return PlayerList.players;
     }
 }
