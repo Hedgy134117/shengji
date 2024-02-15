@@ -4,13 +4,33 @@
 
 	async function initialize() {
 		await PlayerList.initialize();
-		console.log(PlayerList.players);
-		await GameList.initialize();
-		console.log(GameList.games);
+		return GameList.initialize();
 	}
-
-	initialize();
 </script>
 
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+{#await initialize()}
+	<p>Loading Players</p>
+{:then}
+	<table>
+		<tr>
+			<th>Name</th>
+			<th>Games</th>
+		</tr>
+		{#each PlayerList.players as player}
+			<tr>
+				<td>{player.name}</td>
+				<td>
+					{#each player.getScoresWithStaged() as scoreAndStage}
+						<span><span class={scoreAndStage[1] ? 'staged' : ''}>{scoreAndStage[0]}</span>, </span>
+					{/each}
+				</td>
+			</tr>
+		{/each}
+	</table>
+{/await}
+
+<style>
+	.staged {
+		text-decoration: underline;
+	}
+</style>

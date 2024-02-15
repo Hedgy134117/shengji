@@ -13,7 +13,19 @@ export class Game {
 		this._staged = staged;
 	}
 
+	public get date() {
+		return this._date;
+	}
+
 	public get players() {
 		return this._players;
+	}
+
+	public get scores() {
+		return this._scores;
+	}
+
+	public get staged() {
+		return this._staged;
 	}
 }
