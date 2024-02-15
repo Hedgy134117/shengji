@@ -12,14 +12,14 @@ export class PlayerList {
 			(querySnapshot) => {
 				querySnapshot.forEach((doc) => {
 					const data = doc.data();
-					this.addPlayer(doc.id, data['name'], data['level']);
+					this.addPlayer(doc.id, data['name']);
 				});
 			}
 		);
 	}
 
-	static addPlayer(id: string, name: string, level: number): Player {
-		const player = new Player(id, name, level);
+	static addPlayer(id: string, name: string): Player {
+		const player = new Player(id, name);
 		if (!this.players.includes(player)) {
 			this.players.push(player);
 		}

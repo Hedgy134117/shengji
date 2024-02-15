@@ -3,13 +3,11 @@ import type { Game } from './Game';
 export class Player {
 	private _id: string;
 	private _name: string;
-	private _level: number;
 	private _games: Game[];
 
-	constructor(id: string, name: string, level: number) {
+	constructor(id: string, name: string) {
 		this._id = id;
 		this._name = name;
-		this._level = level;
 		this._games = [];
 	}
 
@@ -19,10 +17,6 @@ export class Player {
 
 	public get name() {
 		return this._name;
-	}
-
-	public get level() {
-		return this._level;
 	}
 
 	public addGame(game: Game) {
@@ -76,8 +70,23 @@ export class Player {
 		while (start != score) {
 			start++;
 			progress++;
-			start %= 14;
+
+			if (start > 13) {
+				start = 2;
+			}
 		}
 		return progress / 12;
+	}
+
+	public getPrestige(): number {
+		let prestige = 0;
+		const start = this.getStart();
+		const scores = this.getScores();
+		for (let i = 1; i < scores.length; i++) {
+			if (scores[i] == start && scores[i - 1] != scores[i]) {
+				prestige++;
+			}
+		}
+		return prestige;
 	}
 }

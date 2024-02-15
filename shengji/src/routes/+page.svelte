@@ -10,12 +10,22 @@
 	}
 
 	function test() {
-		let player = PlayerList.addPlayer('abc', 'TestPlayer', 2, 0);
-		for (let i = 2; i <= 13; i++) {
-			let game = new Game(new Date(), [player], [i], [true]);
+		let player = PlayerList.addPlayer('abc', 'TestPlayer');
+		for (let i = 6; i <= 6 + 12 * 2; i++) {
+			let game = new Game(new Date(), [player], [(i % 12) + 2], [true]);
 			player.addGame(game);
 		}
-		player.addGame(new Game(new Date(), [player], [2], [true]));
+		// player.addGame(new Game(new Date(), [player], [2], [true]));
+	}
+
+	function scoreToString(val: number): string | null | undefined {
+		if (val <= 10) {
+			return val.toString();
+		}
+		if (val <= 13) {
+			return { 11: 'J', 12: 'Q', 13: 'K' }[val]; // Can you be an A?
+		}
+		return null;
 	}
 </script>
 
@@ -25,16 +35,22 @@
 	<table>
 		<tr>
 			<th>Name</th>
+			<th>Prestige</th>
 			<th>Progress</th>
 			<th>Games</th>
 		</tr>
 		{#each PlayerList.players as player}
 			<tr>
 				<td>{player.name}</td>
+				<td>{player.getPrestige()}</td>
 				<td>{Math.round(player.getProgress() * 100)}%</td>
 				<td>
 					{#each player.getScoresWithStaged() as scoreAndStage}
-						<span><span class={scoreAndStage[1] ? 'staged' : ''}>{scoreAndStage[0]}</span>, </span>
+						<span
+							><span class={scoreAndStage[1] ? 'staged' : ''}
+								>{scoreToString(scoreAndStage[0])}</span
+							>,
+						</span>
 					{/each}
 				</td>
 			</tr>
