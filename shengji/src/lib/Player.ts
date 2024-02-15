@@ -4,14 +4,12 @@ export class Player {
 	private _id: string;
 	private _name: string;
 	private _level: number;
-	private _prestige: number;
 	private _games: Game[];
 
-	constructor(id: string, name: string, level: number, prestige: number) {
+	constructor(id: string, name: string, level: number) {
 		this._id = id;
 		this._name = name;
 		this._level = level;
-		this._prestige = prestige;
 		this._games = [];
 	}
 
@@ -69,5 +67,17 @@ export class Player {
 		const mostRecentGame = this._games[this._games.length - 1];
 		const index = mostRecentGame.players.indexOf(this);
 		return mostRecentGame.staged[index];
+	}
+
+	public getProgress(): number {
+		const score = this.getScore();
+		let start = this.getStart();
+		let progress = 0;
+		while (start != score) {
+			start++;
+			progress++;
+			start %= 14;
+		}
+		return progress / 12;
 	}
 }
