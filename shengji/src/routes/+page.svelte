@@ -15,7 +15,6 @@
 			let game = new Game(new Date(), [player], [(i % 12) + 2], [true]);
 			player.addGame(game);
 		}
-		// player.addGame(new Game(new Date(), [player], [2], [true]));
 	}
 
 	function scoreToString(val: number): string | null | undefined {
@@ -23,7 +22,7 @@
 			return val.toString();
 		}
 		if (val <= 13) {
-			return { 11: 'J', 12: 'Q', 13: 'K' }[val]; // Can you be an A?
+			return { 11: 'J', 12: 'Q', 13: 'K' }[val];
 		}
 		return null;
 	}
