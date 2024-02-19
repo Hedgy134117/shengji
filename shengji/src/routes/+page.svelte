@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PlayerList } from '$lib/PlayerList';
-	import PlayerBox from './PlayerBox.svelte';
+	import PlayerBox from '$lib/components/PlayerBox.svelte';
 	import { GameList } from '$lib/GameList';
 	import { Game } from '$lib/Game';
 
@@ -46,21 +46,26 @@
 		background-color: #121212;
 		color: #ffffff;
 		box-sizing: border-box;
-		margin: 0;
+		margin: 1em 0;
 	}
 
 	:global(p) {
 		margin: 0;
 	}
 
-	main {
-		margin: 0 auto;
+	:global(a) {
+		color: inherit;
+		text-decoration: none;
+	}
+
+	:global(main) {
+		margin: auto;
 		width: 70%;
 		background-color: var(--bg-color-1);
 	}
 
 	@media (max-width: 900px) {
-		main {
+		:global(main) {
 			width: 100%;
 		}
 	}
