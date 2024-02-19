@@ -7,13 +7,13 @@
 	async function initialize() {
 		await PlayerList.initialize();
 		console.log(PlayerList.players);
-		// test();
+		test();
 		return GameList.initialize();
 	}
 
 	function test() {
 		let player = PlayerList.addPlayer('abc', 'TestPlayer', 8);
-		for (let i = 6; i <= 6 + 12 * 2; i++) {
+		for (let i = 6; i <= 6 + 12 * 2 - 1; i++) {
 			let game = new Game(new Date(), [player], [(i % 12) + 2], [true]);
 			player.addGame(game);
 		}
@@ -59,6 +59,9 @@
 		background-color: var(--bg-color-1);
 	}
 
-	.player-box-list {
+	@media (max-width: 900px) {
+		main {
+			width: 100%;
+		}
 	}
 </style>
