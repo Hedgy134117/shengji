@@ -4,10 +4,12 @@ export class Player {
 	private _id: string;
 	private _name: string;
 	private _games: Game[];
+	private _start: number;
 
-	constructor(id: string, name: string) {
+	constructor(id: string, name: string, start: number) {
 		this._id = id;
 		this._name = name;
+		this._start = start;
 		this._games = [];
 	}
 
@@ -19,12 +21,21 @@ export class Player {
 		return this._name;
 	}
 
+	// Start: The player's starting value
+	public get start() {
+		return this._start;
+	}
+
 	public addGame(game: Game) {
 		this._games.push(game);
 	}
 
 	// Score: The player's current value
 	public getScore(): number {
+		if (this._games.length == 0) {
+			return this.start;
+		}
+
 		const mostRecentGame = this._games[this._games.length - 1];
 		const index = mostRecentGame.players.indexOf(this);
 		return mostRecentGame.scores[index];
@@ -52,15 +63,12 @@ export class Player {
 		return scoresWithStaged;
 	}
 
-	// Start: The player's starting value
-	public getStart(): number {
-		const firstGame = this._games[0];
-		const index = firstGame.players.indexOf(this);
-		return firstGame.scores[index];
-	}
-
 	// Staged: Whether or not the player can host
 	public isStaged(): boolean {
+		if (this._games.length == 0) {
+			return true;
+		}
+
 		const mostRecentGame = this._games[this._games.length - 1];
 		const index = mostRecentGame.players.indexOf(this);
 		return mostRecentGame.staged[index];
@@ -69,7 +77,7 @@ export class Player {
 	// Prestige: How many times the player has passed their start
 	public getPrestige(): number {
 		let prestige = 0;
-		const start = this.getStart();
+		const start = this.start;
 		const scores = this.getScores();
 		for (let i = 1; i < scores.length; i++) {
 			// If the player has gone through every other card and then reached their card again, +1 prestige
@@ -83,7 +91,7 @@ export class Player {
 	// Progress: A scale (0-1) of how close the player is to reaching a new prestige
 	public getProgress(): number {
 		const score = this.getScore();
-		let start = this.getStart();
+		let start = this.start;
 		let progress = 0;
 		while (start != score) {
 			start++;

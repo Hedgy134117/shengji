@@ -1,64 +1,64 @@
 <script lang="ts">
 	import { PlayerList } from '$lib/PlayerList';
+	import PlayerBox from './PlayerBox.svelte';
 	import { GameList } from '$lib/GameList';
 	import { Game } from '$lib/Game';
 
 	async function initialize() {
 		await PlayerList.initialize();
-		test();
+		console.log(PlayerList.players);
+		// test();
 		return GameList.initialize();
 	}
 
 	function test() {
-		let player = PlayerList.addPlayer('abc', 'TestPlayer');
+		let player = PlayerList.addPlayer('abc', 'TestPlayer', 8);
 		for (let i = 6; i <= 6 + 12 * 2; i++) {
 			let game = new Game(new Date(), [player], [(i % 12) + 2], [true]);
 			player.addGame(game);
 		}
 	}
-
-	function scoreToString(val: number): string | null | undefined {
-		if (val <= 10) {
-			return val.toString();
-		}
-		if (val <= 13) {
-			return { 11: 'J', 12: 'Q', 13: 'K' }[val];
-		}
-		return null;
-	}
 </script>
 
-{#await initialize()}
-	<p>Loading Players</p>
-{:then}
-	<table>
-		<tr>
-			<th>Name</th>
-			<th>Prestige</th>
-			<th>Progress</th>
-			<th>Games</th>
-		</tr>
-		{#each PlayerList.players as player}
-			<tr>
-				<td>{player.name}</td>
-				<td>{player.getPrestige()}</td>
-				<td>{Math.round(player.getProgress() * 100)}%</td>
-				<td>
-					{#each player.getScoresWithStaged() as scoreAndStage}
-						<span
-							><span class={scoreAndStage[1] ? 'staged' : ''}
-								>{scoreToString(scoreAndStage[0])}</span
-							>,
-						</span>
-					{/each}
-				</td>
-			</tr>
-		{/each}
-	</table>
-{/await}
+<main>
+	{#await initialize()}
+		<p>Loading Data</p>
+	{:then}
+		<div class="player-box-list">
+			{#each PlayerList.players as player}
+				<PlayerBox {player} />
+			{/each}
+		</div>
+	{/await}
+</main>
 
 <style>
-	.staged {
-		text-decoration: underline;
+	:global(:root) {
+		--bg-color: #121212;
+		--bg-color-1: #181818;
+		--bg-color-2: #1e1e1e;
+		--accent-color: #dd2e44;
+	}
+
+	:global(body) {
+		font-family: 'Noto Sans', sans-serif;
+		/* font-family: 'Comic Sans MS', 'Chalkboard SE', 'Comic Neue', sans-serif; */
+		background-color: #121212;
+		color: #ffffff;
+		box-sizing: border-box;
+		margin: 0;
+	}
+
+	:global(p) {
+		margin: 0;
+	}
+
+	main {
+		margin: 0 auto;
+		width: 70%;
+		background-color: var(--bg-color-1);
+	}
+
+	.player-box-list {
 	}
 </style>
