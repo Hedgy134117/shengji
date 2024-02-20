@@ -34,4 +34,10 @@
 	ul > a:not(:last-child) {
 		border-right: 1px solid gray;
 	}
+
+	@media (max-width: 900px) {
+		nav {
+			width: 100%;
+		}
+	}
 </style>

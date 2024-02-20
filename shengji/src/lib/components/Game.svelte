@@ -10,7 +10,6 @@
 	}
 
 	let scoreDiff = game.getScoreDifference();
-	console.log(game.date);
 </script>
 
 <div class="game">
