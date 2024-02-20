@@ -12,6 +12,10 @@
 	let firstGame: GameType;
 </script>
 
+<svelte:head>
+	<title>shengji games</title>
+</svelte:head>
+
 <main>
 	{#await initialize()}
 		<p>Loading Data</p>
@@ -21,7 +25,7 @@
 			<!-- TODO: if a bunch of games fall on the same date, 
                 they should probably be put together into 
                 some sort of "GameBlock" with a "Date" header -->
-			{#each GameList.games as game}
+			{#each GameList.games.reverse() as game}
 				<Game {game} />
 			{/each}
 		</div>

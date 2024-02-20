@@ -10,6 +10,10 @@
 	}
 </script>
 
+<svelte:head>
+	<title>shengji players</title>
+</svelte:head>
+
 <main>
 	{#await initialize()}
 		<p>Loading Data</p>
