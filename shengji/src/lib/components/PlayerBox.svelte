@@ -1,17 +1,8 @@
 <script lang="ts">
 	import { Player } from '$lib/Player';
+	import { scoreToString } from '$lib/util';
 
 	export let player: Player;
-
-	function scoreToString(val: number): string | null | undefined {
-		if (val <= 10) {
-			return val.toString();
-		}
-		if (val <= 13) {
-			return { 11: 'J', 12: 'Q', 13: 'K' }[val];
-		}
-		return null;
-	}
 </script>
 
 <div class="player-box">

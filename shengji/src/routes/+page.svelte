@@ -38,6 +38,8 @@
 		--bg-color-1: #181818;
 		--bg-color-2: #1e1e1e;
 		--accent-color: #dd2e44;
+		--accent-color-1: #dd5567;
+		--accent-color-2: #e08d98;
 	}
 
 	:global(body) {

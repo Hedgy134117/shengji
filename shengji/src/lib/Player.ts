@@ -21,6 +21,10 @@ export class Player {
 		return this._name;
 	}
 
+	public get games() {
+		return this._games;
+	}
+
 	// Start: The player's starting value
 	public get start() {
 		return this._start;

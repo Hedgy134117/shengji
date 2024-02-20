@@ -17,7 +17,12 @@ export class GameList {
 				for (let i = 0; i < gameData.players.length; i++) {
 					gameData.players[i] = PlayerList.getPlayerById(gameData.players[i].id);
 				}
-				let game = new Game(gameData.date, gameData.players, gameData.scores, gameData.staged);
+				let game = new Game(
+					gameData.date.toDate(),
+					gameData.players,
+					gameData.scores,
+					gameData.staged
+				);
 				this.games.push(game);
 
 				// Add the game to each player involved
