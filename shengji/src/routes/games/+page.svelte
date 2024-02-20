@@ -18,6 +18,9 @@
 	{:then}
 		<div class="game-list">
 			<!-- <Game game={firstGame} /> -->
+			<!-- TODO: if a bunch of games fall on the same date, 
+                they should probably be put together into 
+                some sort of "GameBlock" with a "Date" header -->
 			{#each GameList.games as game}
 				<Game {game} />
 			{/each}

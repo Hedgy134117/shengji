@@ -6,17 +6,7 @@
 
 	async function initialize() {
 		await PlayerList.initialize();
-		console.log(PlayerList.players);
-		test();
 		return GameList.initialize();
-	}
-
-	function test() {
-		let player = PlayerList.addPlayer('abc', 'TestPlayer', 8);
-		for (let i = 6; i <= 6 + 12 * 2 - 1; i++) {
-			let game = new Game(new Date(), [player], [(i % 12) + 2], [true]);
-			player.addGame(game);
-		}
 	}
 </script>
 
