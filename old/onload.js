@@ -17,8 +17,9 @@ function reloadAndPopulate() {
 window.onload = async () => {
     await PlayerList.initializePlayerList();
     await GameList.initializeGameList();
+    console.log(PlayerList.getPlayerList());
 
-    reloadAndPopulate();
+    // reloadAndPopulate();
 
     const addPlayerForm = document.querySelector("#addPlayer");
     addPlayerForm.addEventListener("submit", event => {

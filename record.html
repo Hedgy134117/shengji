@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<link rel="icon" href="./favicon.ico" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+		rel="stylesheet">
+	
+		<link href="./_app/immutable/assets/0.DZ7LbECT.css" rel="stylesheet">
+		<link rel="modulepreload" href="./_app/immutable/entry/start.uOkeh_kl.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/entry.CbaznpzZ.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/scheduler.CQ0VQmrD.js">
+		<link rel="modulepreload" href="./_app/immutable/entry/app.ijdUfDkr.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/index.DRkjVt1f.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/0.C-4zX8aW.js">
+		<link rel="modulepreload" href="./_app/immutable/nodes/4.CBaKibV5.js">
+		<link rel="modulepreload" href="./_app/immutable/chunks/GameList.Dm-SxhZe.js"><title>shengji record</title><!-- HEAD_svelte-1b6f4m5_START --><!-- HEAD_svelte-1b6f4m5_END -->
+</head>
+
+<body data-sveltekit-preload-data="hover">
+	<div style="display: contents">  <h1 class="logo svelte-6anbhl" data-svelte-h="svelte-bbrafa">shengji <span class="svelte-6anbhl">PRO</span></h1> <nav class="svelte-1wju1p3" data-svelte-h="svelte-1ybmves"><ul class="svelte-1wju1p3"><a href="/" class="svelte-1wju1p3"><li>Players</li></a> <a href="/games" class="svelte-1wju1p3"><li>Games</li></a> <a href="/record" class="svelte-1wju1p3"><li>Record</li></a></ul> </nav>  <main> <form method="POST" id="recordPlayer" data-svelte-h="svelte-ezu4wc"><h1>add player</h1> <p><label for="name"><span>Name:</span></label> <input type="text" name="name" id="name" required></p> <p><label for="level"><span>Level:</span></label> <input type="number" name="level" id="level" value="2" required></p> <p><label for="prestige"><span>Prestige:</span></label> <input type="number" name="prestige" id="prestige" value="0" required></p> <p><button type="submit">add</button></p></form> <form method="POST" id="recordGame"><h1 data-svelte-h="svelte-v9j2fd">record game</h1> <label for="date" data-svelte-h="svelte-1mfsj80">Date:</label> <input type="datetime-local" name="date" id="date"> <fieldset><legend data-svelte-h="svelte-14tiku8">Players</legend> <ul id="playerList"></ul></fieldset> <fieldset><legend data-svelte-h="svelte-1b71l1n">Scores</legend> <ul id="scoreList"></ul></fieldset> <fieldset><legend data-svelte-h="svelte-xul9i6">Staged</legend> <ul id="stageList"></ul></fieldset> <p data-svelte-h="svelte-3vltf7"><button type="submit">record</button></p></form> </main> 
+			
+			<script>
+				{
+					__sveltekit_o9ijh6 = {
+						base: new URL(".", location).pathname.slice(0, -1)
+					};
+
+					const element = document.currentScript.parentElement;
+
+					const data = [null,null];
+
+					Promise.all([
+						import("./_app/immutable/entry/start.uOkeh_kl.js"),
+						import("./_app/immutable/entry/app.ijdUfDkr.js")
+					]).then(([kit, app]) => {
+						kit.start(app, element, {
+							node_ids: [0, 4],
+							data,
+							form: null,
+							error: null
+						});
+					});
+				}
+			</script>
+		</div>
+</body>
+
+</html>
