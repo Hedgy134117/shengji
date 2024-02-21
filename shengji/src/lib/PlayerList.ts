@@ -34,4 +34,13 @@ export class PlayerList {
 		}
 		return null;
 	}
+
+	static getPlayerByName(name: string): Player | null {
+		for (let player of this.players) {
+			if (player.name === name) {
+				return player;
+			}
+		}
+		return null;
+	}
 }
