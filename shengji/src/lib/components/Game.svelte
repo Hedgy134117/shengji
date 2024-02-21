@@ -36,12 +36,13 @@
 <style>
 	.game {
 		border-bottom: 1px solid gray;
+		overflow: auto;
 	}
 
 	.equal-fill {
 		display: grid;
 		grid-auto-flow: column;
-		grid-auto-columns: 1fr;
+		grid-auto-columns: minmax(5em, 1fr);
 	}
 
 	.equal-fill > * {
