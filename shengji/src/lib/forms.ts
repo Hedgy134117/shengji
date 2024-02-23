@@ -26,7 +26,7 @@ export function recordGame(form: FormData) {
 	let players = [];
 	let scores = [];
 	let stages = [];
-	for (let [key, value] of Object.entries(data)) {
+	for (let key of Object.keys(data)) {
 		if (!(key.endsWith('-score') || key.endsWith('-stage'))) {
 			players.push(doc(db, `players/${PlayerList.getPlayerByName(key)?.id}`));
 			// If the stage for the player isn't checked, 'data' doesn't know
@@ -36,8 +36,8 @@ export function recordGame(form: FormData) {
 			} else {
 				stages.push(true);
 			}
-		} else if (key.endsWith('-score')) {
-			scores.push(value);
+
+			scores.push(data[`${key}-score`]);
 		}
 	}
 

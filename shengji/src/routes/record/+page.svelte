@@ -3,6 +3,7 @@
 	import type { Player } from '$lib/Player';
 	import { PlayerList } from '$lib/PlayerList';
 	import { recordGame, recordPlayer } from '$lib/forms';
+	import { scoreToString } from '$lib/util';
 	import { onMount } from 'svelte';
 
 	async function initialize() {
@@ -11,6 +12,7 @@
 	}
 
 	let playersPlaying = [] as Player[];
+	let scores = [] as number[];
 
 	function addPlayerPlaying(event: Event) {
 		const player = PlayerList.getPlayerById((event.target as HTMLElement).id);
@@ -20,13 +22,28 @@
 
 		// Remove player from playing if they are in
 		if (playersPlaying.indexOf(player) >= 0) {
-			playersPlaying.splice(playersPlaying.indexOf(player), 1);
+			const index = playersPlaying.indexOf(player);
+			playersPlaying.splice(index, 1);
 			playersPlaying = playersPlaying; // update DOM
+
+			scores.splice(index, 1);
+			scores = scores;
 			return;
 		}
 
 		// Add player if they aren't already in
 		playersPlaying = [...playersPlaying, player]; // update DOM (instead of .push)
+		scores = [...scores, player.getScore()];
+	}
+
+	function changeScore(event: Event) {
+		const player = PlayerList.getPlayerById((event.target as HTMLElement).id.replace('-score', ''));
+		if (player === null) {
+			return;
+		}
+
+		const index = playersPlaying.indexOf(player);
+		scores[index] = parseInt((event.target as HTMLInputElement).value);
 	}
 
 	onMount(() => {
@@ -80,19 +97,19 @@
 
 		<fieldset>
 			<legend>Players</legend>
-			<ul id="playerList">
+			<ul id="playerList" class="wrap-list">
 				{#await initialize() then}
 					{#each PlayerList.players as player}
 						<li>
-							<label for={player.id}>
-								<span>{player.name}</span>
-							</label>
 							<input
 								type="checkbox"
 								id={player.id}
 								name={player.name}
 								on:change={addPlayerPlaying}
 							/>
+							<label for={player.id} class="clickable-label">
+								<span>{player.name}</span>
+							</label>
 						</li>
 					{/each}
 				{/await}
@@ -101,38 +118,28 @@
 
 		<fieldset>
 			<legend>Scores</legend>
-			<ul id="scoreList">
-				{#each playersPlaying as player}
+			<ul id="scoreList" class="wrap-list wrap-list--center">
+				{#each playersPlaying as player, i}
 					<li>
-						<label for="{player.id}-score">
-							<span>{player.name}</span>
-						</label>
-						<input
-							type="number"
-							id="{player.id}-score"
-							name="{player.name}-score"
-							value={player.getScore()}
-							required
-						/>
-					</li>
-				{/each}
-			</ul>
-		</fieldset>
-
-		<fieldset>
-			<legend>Staged</legend>
-			<ul id="stageList">
-				{#each playersPlaying as player}
-					<li>
-						<label for="{player.id}-stage">
-							<span>{player.name}</span>
-						</label>
+						<!-- TODO: could probably simplify this by using bind -->
 						<input
 							type="checkbox"
 							id="{player.id}-stage"
 							name="{player.name}-stage"
 							checked={player.isStaged()}
 						/>
+						<label for="{player.id}-stage" class="clickable-label">
+							<span>{player.name}</span>
+						</label>
+						<input
+							type="number"
+							id="{player.id}-score"
+							name="{player.name}-score"
+							value={scores[i]}
+							on:change={changeScore}
+							required
+						/>
+						<p class="score-value">{scoreToString(scores[i])}</p>
 					</li>
 				{/each}
 			</ul>
@@ -143,4 +150,55 @@
 </main>
 
 <style>
+	ul {
+		padding: 0;
+	}
+
+	li {
+		list-style-type: none;
+		margin: 0.5em;
+	}
+
+	input {
+		margin-top: 1em;
+		padding: 1em;
+	}
+
+	input[type='checkbox'] {
+		display: none;
+	}
+
+	input[type='checkbox']:checked + .clickable-label {
+		border: 1px solid var(--accent-color);
+	}
+
+	.clickable-label {
+		display: block;
+		padding: 1em;
+		border-radius: 12px;
+		border: 1px solid gray;
+	}
+
+	.clickable-label:hover {
+		cursor: pointer;
+	}
+
+	.wrap-list {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.wrap-list--center {
+		justify-content: center;
+	}
+
+	.score-value {
+		margin-top: 1em;
+	}
+
+	#scoreList li {
+		display: flex;
+		flex-direction: column;
+		text-align: center;
+	}
 </style>
