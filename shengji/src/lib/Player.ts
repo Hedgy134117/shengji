@@ -83,11 +83,39 @@ export class Player {
 		let prestige = 0;
 		const start = this.start;
 		const scores = this.getScores();
+
 		for (let i = 1; i < scores.length; i++) {
-			// If the player has gone through every other card and then reached their card again, +1 prestige
+			let diff = Math.abs(scores[i] - scores[i - 1]);
+
+			// If the player has gone through every other card and then reached their start again
 			if (scores[i] == start && scores[i - 1] != scores[i]) {
 				prestige++;
 			}
+			// If the player has gone through every other card and jumped over their start
+			else if (scores[i] > start && scores[i - 1] < start) {
+				prestige++;
+			}
+			// See table below
+			else if (diff == 9 || diff == 10) {
+				prestige++;
+			}
+
+			/*
+			2 start:
+			- K 3 (2) = 13 - 3 = 10
+			- K 4 (3) = 13 - 4 = 9
+			- Q 3 (3) = 12 - 3 = 9
+
+			3 start:
+			- K 4 (3) = 13 - 4 = 9
+			
+			Q start:
+			- J 2 (3) = 11 - 2 = 9
+
+			K start:
+			- Q 2 (2) = 12 - 2 = 10
+			- Q 3 (3) = 12 - 3 = 9
+			*/
 		}
 		return prestige;
 	}

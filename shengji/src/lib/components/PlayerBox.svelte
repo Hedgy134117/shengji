@@ -6,7 +6,9 @@
 </script>
 
 <div class="player-box">
-	<p class="player-name">{player.name}</p>
+	<p class="player-name" style="border: {player.getPrestige()}px solid var(--accent-color)">
+		{player.name}
+	</p>
 	<!-- TODO: make this its own component -->
 	<div class="scores">
 		<p class="score score__curent" class:score__staged={player.isStaged()}>
