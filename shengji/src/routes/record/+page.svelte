@@ -89,6 +89,12 @@
 		<p><button type="submit">add</button></p>
 	</form>
 
+	<!-- TODO:
+			This form is still bothersome to use:
+			- easy to mess up time
+			- need a small/big/massive win button with overflow
+			- no feedback on hitting record
+	-->
 	<form method="POST" id="recordGame">
 		<h1>record game</h1>
 

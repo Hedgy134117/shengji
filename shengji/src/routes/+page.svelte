@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { PlayerList } from '$lib/PlayerList';
-	import PlayerBox from '$lib/components/PlayerBox.svelte';
+	import PlayerBox from './PlayerBox.svelte';
 	import { GameList } from '$lib/GameList';
 	import { Game } from '$lib/Game';
 
