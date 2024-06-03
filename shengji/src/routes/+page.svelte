@@ -8,6 +8,27 @@
 		await PlayerList.initialize();
 		return GameList.initialize();
 	}
+
+	function exportData() {
+		let data: { [id: string]: [number, boolean][] } = {};
+		for (let player of PlayerList.players) {
+			data[player.name] = player.getScoresWithStaged();
+		}
+
+		// https://www.jameslmilner.com/posts/downloading-a-file-with-javascript/
+		let res = JSON.stringify(data);
+		let blob = new Blob([res], { type: 'application/json' });
+		let jsonObjectUrl = URL.createObjectURL(blob);
+
+		let filename = 'export.json';
+		let anchor = document.createElement('a');
+		anchor.href = jsonObjectUrl;
+		anchor.download = filename;
+
+		anchor.click();
+		URL.revokeObjectURL(jsonObjectUrl);
+		anchor.remove();
+	}
 </script>
 
 <svelte:head>
@@ -23,6 +44,7 @@
 				<PlayerBox {player} />
 			{/each}
 		</div>
+		<button on:click={exportData}>Export to JSON</button>
 	{/await}
 </main>
 

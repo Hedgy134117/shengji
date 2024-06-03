@@ -20,7 +20,7 @@ export class GameList {
 				let game = new Game(
 					gameData.date.toDate(),
 					gameData.players,
-					gameData.scores,
+					gameData.scores.map((score: string) => parseInt(score)),
 					gameData.staged
 				);
 				this.games.push(game);
