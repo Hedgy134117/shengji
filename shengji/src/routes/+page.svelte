@@ -3,6 +3,7 @@
 	import PlayerBox from './PlayerBox.svelte';
 	import { GameList } from '$lib/GameList';
 	import { Game } from '$lib/Game';
+	import { downloadFile } from '$lib/util';
 
 	async function initialize() {
 		await PlayerList.initialize();
@@ -15,19 +16,7 @@
 			data[player.name] = player.getScoresWithStaged();
 		}
 
-		// https://www.jameslmilner.com/posts/downloading-a-file-with-javascript/
-		let res = JSON.stringify(data);
-		let blob = new Blob([res], { type: 'application/json' });
-		let jsonObjectUrl = URL.createObjectURL(blob);
-
-		let filename = 'export.json';
-		let anchor = document.createElement('a');
-		anchor.href = jsonObjectUrl;
-		anchor.download = filename;
-
-		anchor.click();
-		URL.revokeObjectURL(jsonObjectUrl);
-		anchor.remove();
+		downloadFile(data, 'players');
 	}
 </script>
 

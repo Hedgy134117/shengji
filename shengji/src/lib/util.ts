@@ -18,3 +18,19 @@ export function addTestPlayer(start: number, prestige: number, extra: number) {
 		player.addGame(game);
 	}
 }
+
+export function downloadFile(data: any, name: string) {
+	// https://www.jameslmilner.com/posts/downloading-a-file-with-javascript/
+	let res = JSON.stringify(data, null, "\t");
+	let blob = new Blob([res], { type: 'application/json' });
+	let jsonObjectUrl = URL.createObjectURL(blob);
+
+	let filename = `${name}.json`;
+	let anchor = document.createElement('a');
+	anchor.href = jsonObjectUrl;
+	anchor.download = filename;
+
+	anchor.click();
+	URL.revokeObjectURL(jsonObjectUrl);
+	anchor.remove();
+}
