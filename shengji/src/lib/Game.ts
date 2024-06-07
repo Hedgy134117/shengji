@@ -85,7 +85,7 @@ export class Game {
 		// [2, false] -> [3, true] (gained rank + staged)
 		// [13, false] -> [2, true] (gained rank + staged)
 		// [2, true] -> [4, true] (gained 2 rank)
-		if ((gainOneRank && gainStaged) || gainTwoRank) {
+		if ((gainOneRank && gainStaged) || (gainTwoRank && noStageChange)) {
 			return 2;
 		}
 

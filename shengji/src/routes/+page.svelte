@@ -11,9 +11,11 @@
 	}
 
 	function exportData() {
-		let data: { [id: string]: [number, boolean][] } = {};
+		let data: any = { };
 		for (let player of PlayerList.players) {
-			data[player.name] = player.getScoresWithStaged();
+			data[player.name] = { };
+			data[player.name]["history"] = player.getScoresWithStaged();
+			data[player.name]["prestige"] = player.getPrestige();
 		}
 
 		downloadFile(data, 'players');

@@ -2,6 +2,8 @@ import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
 import { PlayerList } from './PlayerList';
 import { GameList } from './GameList';
 import { db } from './firebase';
+import type { Player } from './Player';
+import { Game } from './Game';
 
 function formDataToObject(form: FormData): any {
 	return JSON.parse(JSON.stringify(Object.fromEntries(form))); // https://javascript.plainenglish.io/how-to-convert-javascript-formdata-to-object-to-json-67541fafb7a6
@@ -17,34 +19,35 @@ export async function recordPlayer(form: FormData) {
 	});
 }
 
-export function recordGame(form: FormData) {
-	let data = formDataToObject(form);
-
-	let date = data['date'];
-	delete data['date'];
-
-	let players = [];
-	let scores = [];
-	let stages = [];
-	for (let key of Object.keys(data)) {
-		if (!(key.endsWith('-score') || key.endsWith('-stage'))) {
-			players.push(doc(db, `players/${PlayerList.getPlayerByName(key)?.id}`));
-			// If the stage for the player isn't checked, 'data' doesn't know
-			// so we need to do it ourselves
-			if (Object.keys(data).indexOf(`${key}-stage`) == -1) {
-				stages.push(false);
-			} else {
-				stages.push(true);
-			}
-
-			scores.push(data[`${key}-score`]);
+export function recordGame(date: Date, players: Player[], results: { [id: string]: [number, boolean] }) {
+	if (players.length < 4) {
+		return "Missing players";
+	}
+	for (let game of GameList.games) {
+		if (game.date.getTime() == date.getTime()) {
+			return "Game already exists at this time";
 		}
 	}
 
+	let playerDocs = players.map(player => doc(db, `players/${player.id}`))
+	
+	let scores = [];
+	let stages = [];
+	for (let id of Object.keys(results)) {
+		scores.push(results[id][0]);
+		stages.push(results[id][1]);
+	}
+
+	if (players.length !== scores.length || players.length !== stages.length) {
+		return "Missing scores";
+	}
+
+	
+
 	return addDoc(collection(db, 'games'), {
 		date: Timestamp.fromDate(new Date(date)),
-		players: players,
+		players: playerDocs,
 		scores: scores,
 		staged: stages
-	});
+	}).then(() => GameList.games.push(new Game(date, players, scores, stages)));
 }
