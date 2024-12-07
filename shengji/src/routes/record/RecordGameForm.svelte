@@ -2,6 +2,7 @@
 
 <script lang="ts">
 	import type { Player } from '$lib/Player';
+	import { PlayerList } from '$lib/PlayerList';
 	import { recordGame } from '$lib/forms';
 	import { scoreToString } from '$lib/util';
 	import { onMount } from 'svelte';
@@ -18,7 +19,9 @@
 	}
 
 	let results: { [id: string]: [number, boolean] } = {};
+	let changes: { [id: string]: number } = {};
 	function changeResults(player: Player, change: number) {
+		changes[player.id] = change;
 		results[player.id] = [0, false];
 		results[player.id][0] = player.getScore();
 		results[player.id][1] = player.isStaged();
@@ -54,14 +57,21 @@
 
 	let date: any = new Date();
 	onMount(() => {
-		document.querySelector('#recordGame')?.addEventListener('submit', (e) => {
+		document.querySelector('#recordGame')?.addEventListener('submit', async (e) => {
 			e.preventDefault();
-			let response = recordGame(new Date(date), playersPlaying, results);
+			let response = await recordGame(new Date(date), playersPlaying, results);
 
 			if (typeof response === 'string') {
 				alert(response);
 			} else {
-				console.log(response);
+				alert('Game Recorded!');
+			}
+
+			// Update Scores
+			playersPlaying = [...playersPlaying];
+			for (let id in changes) {
+				// @ts-ignore
+				changeResults(PlayerList.getPlayerById(id), changes[id]);
 			}
 		});
 	});

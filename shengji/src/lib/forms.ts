@@ -1,4 +1,4 @@
-import { Timestamp, addDoc, collection, doc } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { PlayerList } from './PlayerList';
 import { GameList } from './GameList';
 import { db } from './firebase';
@@ -19,18 +19,22 @@ export async function recordPlayer(form: FormData) {
 	});
 }
 
-export function recordGame(date: Date, players: Player[], results: { [id: string]: [number, boolean] }) {
+export async function recordGame(
+	date: Date,
+	players: Player[],
+	results: { [id: string]: [number, boolean] }
+) {
 	if (players.length < 4) {
-		return "Missing players";
+		return 'Missing players';
 	}
 	for (let game of GameList.games) {
 		if (game.date.getTime() == date.getTime()) {
-			return "Game already exists at this time";
+			return 'Game already exists at this time';
 		}
 	}
 
-	let playerDocs = players.map(player => doc(db, `players/${player.id}`))
-	
+	let playerDocs = players.map((player) => doc(db, `players/${player.id}`));
+
 	let scores = [];
 	let stages = [];
 	for (let id of Object.keys(results)) {
@@ -39,15 +43,22 @@ export function recordGame(date: Date, players: Player[], results: { [id: string
 	}
 
 	if (players.length !== scores.length || players.length !== stages.length) {
-		return "Missing scores";
+		return 'Missing scores';
 	}
 
-	
-
-	return addDoc(collection(db, 'games'), {
+	const post = await addDoc(collection(db, 'games'), {
 		date: Timestamp.fromDate(new Date(date)),
 		players: playerDocs,
 		scores: scores,
 		staged: stages
-	}).then(() => GameList.games.push(new Game(date, players, scores, stages)));
+	});
+
+	console.log(post);
+	const newGame = await getDoc(doc(db, 'games', post.id));
+	if (newGame.data() !== undefined) {
+		// @ts-ignore
+		GameList.addGame(newGame.data());
+	}
+
+	return post;
 }
