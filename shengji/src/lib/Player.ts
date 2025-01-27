@@ -37,7 +37,7 @@ export class Player {
 	// Score: The player's current value
 	public getScore(): number {
 		if (this._games.length == 0) {
-			return this.start;
+			return this._start;
 		}
 
 		const mostRecentGame = this._games[this._games.length - 1];
@@ -70,7 +70,7 @@ export class Player {
 	// Staged: Whether or not the player can host
 	public isStaged(): boolean {
 		if (this._games.length == 0) {
-			return true;
+			return false;
 		}
 
 		const mostRecentGame = this._games[this._games.length - 1];
