@@ -13,6 +13,8 @@
 	function addOrRemovePlayer(player: Player) {
 		if (playersPlaying.includes(player)) {
 			playersPlaying = playersPlaying.filter((p) => p.id !== player.id);
+			delete results[player.id];
+			results = results;
 		} else {
 			playersPlaying = [...playersPlaying, player];
 		}
@@ -23,7 +25,10 @@
 	function changeResults(player: Player, change: number) {
 		changes[player.id] = change;
 		results[player.id] = [0, false];
-		results[player.id][0] = player.getScore();
+		// for some reason player.getScore() can return a string when the player
+		// has never played a game
+		// @ts-ignore
+		results[player.id][0] = parseInt(player.getScore());
 		results[player.id][1] = player.isStaged();
 
 		// Loss -> lose stage
@@ -44,6 +49,8 @@
 		if (results[player.id][0] > 13) {
 			results[player.id][0] -= 12;
 		}
+
+		console.log(results[player.id][0]);
 	}
 
 	function resultToHTML(result: [number, boolean]) {
