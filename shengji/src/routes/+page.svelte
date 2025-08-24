@@ -1,42 +1,42 @@
 <script lang="ts">
-	import { PlayerList } from '$lib/PlayerList';
-	import PlayerBox from './PlayerBox.svelte';
-	import { GameList } from '$lib/GameList';
-	import { Game } from '$lib/Game';
-	import { downloadFile } from '$lib/util';
+	function getNextFridayFormatted(): string {
+		const today: Date = new Date();
+		const dayOfWeek: number = today.getDay(); // 0 = Sunday, ..., 5 = Friday
 
-	async function initialize() {
-		await PlayerList.initialize();
-		return GameList.initialize();
-	}
+		const daysUntilFriday: number = (5 - dayOfWeek + 7) % 7 || 7;
+		const nextFriday: Date = new Date(today);
+		nextFriday.setDate(today.getDate() + daysUntilFriday);
 
-	function exportData() {
-		let data: any = { };
-		for (let player of PlayerList.players) {
-			data[player.name] = { };
-			data[player.name]["history"] = player.getScoresWithStaged();
-			data[player.name]["prestige"] = player.getPrestige();
-		}
+		// Format as MM/DD/YYYY
+		const month: string = String(nextFriday.getMonth() + 1).padStart(2, '0');
+		const day: string = String(nextFriday.getDate()).padStart(2, '0');
+		const year: number = nextFriday.getFullYear();
 
-		downloadFile(data, 'players');
+		return `${month}/${day}/${year}`;
 	}
 </script>
 
 <svelte:head>
-	<title>shengji players</title>
+	<title>about</title>
 </svelte:head>
 
 <main>
-	{#await initialize()}
-		<p>Loading Data</p>
-	{:then}
-		<div class="player-box-list">
-			{#each PlayerList.players as player}
-				<PlayerBox {player} />
-			{/each}
-		</div>
-		<button on:click={exportData}>Export to JSON</button>
-	{/await}
+	<p>Hello! Welcome to the Chinese Card Games Club official website!</p>
+	<p>
+		The website is currently under construction but we plan to host game instructions here as well
+		as scoreboards and upcoming events!
+	</p>
+	<p>We meet every Friday at 8pm in the WPU Food Court</p>
+	<p>
+		The next meeting is: <span style="color: var(--accent-color)">{getNextFridayFormatted()}</span>
+	</p>
+	<p>
+		Join our GroupMe <a href="https://groupme.com/join_group/69688448/oK3bBR2T" target="_blank"
+			>here</a
+		>
+		or contact <a href="mailto:gcs28@pitt.edu">Graham Smith (gcs28@pitt.edu)</a> for more information
+	</p>
+	<p>We hope to see you there! :)</p>
 </main>
 
 <style>
@@ -77,5 +77,14 @@
 		:global(main) {
 			width: 100%;
 		}
+	}
+
+	p {
+		padding: 1em;
+	}
+
+	a {
+		color: var(--accent-color);
+		text-decoration: underline;
 	}
 </style>

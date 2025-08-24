@@ -3,9 +3,10 @@
 
 <nav>
 	<ul>
-		<a href="/"><li>Players</li></a>
+		<a href="/"><li>About</li></a>
+		<!-- <a href="/players"><li>Players</li></a>
 		<a href="/games"><li>Games</li></a>
-		<a href="/record"><li>Record</li></a>
+		<a href="/record"><li>Record</li></a> -->
 	</ul>
 </nav>
 
