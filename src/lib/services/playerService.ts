@@ -9,7 +9,7 @@ export async function getPlayerMap(): Promise<Record<string, Player>> {
     ));
     const playerMap: Record<string, Player> = {};
     for (let doc of docRef.docs) {
-        playerMap[doc.id] = doc.data() as Player;
+        playerMap[doc.id] = { id: doc.id, ...doc.data() } as Player;
     }
 
     return playerMap

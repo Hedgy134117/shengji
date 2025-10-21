@@ -1,9 +1,21 @@
 import { db } from "$lib/firebase/client";
-import type { PlayerState, ShengjiGame, ShengjiSession } from "$lib/types";
+import type { Player, PlayerState, ShengjiGame, ShengjiSession } from "$lib/types";
 import { advanceRank } from "$lib/utils/rankCalculation";
-import { collection, getDocs, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
+import { addDoc, collection, getDocs, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
 
 const COLLECTION = "shengji-sessions";
+
+function cloneStateMap(state: Record<string, PlayerState>): Record<string, PlayerState> {
+    const newState: Record<string, PlayerState> = {};
+    for (let playerId in state) {
+        newState[playerId] = {
+            rank: state[playerId].rank,
+            onStage: state[playerId].onStage,
+            prestige: state[playerId].prestige
+        };
+    }
+    return newState;
+}
 
 export function calculateNewState(
     currentState: Record<string, PlayerState>,
@@ -11,7 +23,7 @@ export function calculateNewState(
     losingTeam: string[],
     winTier: 1 | 2 | 3
 ): Record<string, PlayerState> {
-    const newState = { ...currentState };
+    const newState = cloneStateMap(currentState);
     const rankGain = { 1: 1, 2: 2, 3: 3 }[winTier];
     const offStageGain = { 1: 0, 2: 1, 3: 2 }[winTier];
 
@@ -46,7 +58,15 @@ export async function getAllSessions(): Promise<ShengjiSession[]> {
     return sessions
 }
 
-export async function getAllPlayerStates(): Promise<Record<string, PlayerState>> {
+function getNewPlayerState(): PlayerState {
+    return {
+        rank: 2,
+        onStage: true,
+        prestige: 0
+    } as PlayerState;
+}
+
+export async function getAllPlayerStates(playerMap: Record<string, Player>): Promise<Record<string, PlayerState>> {
     const docRef = await getDocs(query(
         collection(db, COLLECTION),
         orderBy("date", "desc"),
@@ -61,6 +81,12 @@ export async function getAllPlayerStates(): Promise<Record<string, PlayerState>>
             if (!(playerId in states)) {
                 states[playerId] = mostRecentGame.stateAfter[playerId];
             }
+        }
+    }
+
+    for (const playerId in playerMap) {
+        if (!(playerId in states)) {
+            states[playerId] = getNewPlayerState();
         }
     }
 
@@ -87,4 +113,9 @@ export async function getPlayerState(playerId: string): Promise<PlayerState> {
 
 function getMostRecentGame(session: ShengjiSession): ShengjiGame {
     return session.games.sort((a, b) => b.gameNum - a.gameNum)[0];
+}
+
+export async function createSession(session: Omit<ShengjiSession, "id">) {
+    const docRef = await addDoc(collection(db, COLLECTION), session);
+    return docRef.id;
 }
