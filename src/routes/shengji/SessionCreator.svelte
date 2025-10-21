@@ -1,9 +1,13 @@
 <script lang="ts">
-    import {
-        calculateNewState,
-        createSession,
-    } from "$lib/services/shengJiService";
-    import type { Player, PlayerState, ShengjiGame } from "$lib/types";
+    import GameTable from "./GameTable.svelte";
+
+    import { createSession } from "$lib/services/shengJiService";
+    import type {
+        Player,
+        PlayerState,
+        ShengjiGame,
+        ShengjiSession,
+    } from "$lib/types";
 
     interface Props {
         playerMap: Record<string, Player>;
@@ -13,71 +17,15 @@
     let { playerMap, playerStateMap }: Props = $props();
 
     let playing: string[] = $state([]);
-    let currentGame: ShengjiGame | null = $state(null);
     let games: ShengjiGame[] = $state([]);
     let date: Date = $state(new Date());
-
-    $effect(() => {
-        if (playing.length > 0 && currentGame === null) {
-            currentGame = {
-                gameNum: games.length + 1,
-                winningTeam:
-                    games.length > 0 ? games[games.length - 1].winningTeam : [],
-                losingTeam:
-                    games.length > 0 ? games[games.length - 1].losingTeam : [],
-                winTier: games.length > 0 ? games[games.length - 1].winTier : 1,
-                stateAfter: {},
-            };
-        }
-    });
-
-    function addGame() {
-        if (currentGame === null) {
-            return;
-        }
-
-        currentGame.losingTeam = playing.filter(
-            (player) => !currentGame?.winningTeam.includes(player),
-        );
-
-        if (
-            currentGame.winningTeam.length < 2 ||
-            currentGame.losingTeam.length < 2
-        ) {
-            return;
-        }
-
-        const currentState: Record<string, PlayerState> = {};
-        for (let playerId of playing) {
-            if (games.length === 0) {
-                currentState[playerId] = playerStateMap[playerId];
-            } else {
-                currentState[playerId] =
-                    games[games.length - 1].stateAfter[playerId];
-            }
-        }
-
-        currentGame.stateAfter = calculateNewState(
-            currentState,
-            currentGame.winningTeam,
-            currentGame.losingTeam,
-            currentGame.winTier,
-        );
-
-        games.push(currentGame);
-        currentGame = null;
-    }
-
-    function uploadSession() {
-        createSession({
-            seasonId: "bmkOnqItvr9dSgbyubFX",
-            date: date,
-            players: playing,
-            games: games,
-        });
-    }
-
     let dateString = $state("");
+    let session: Omit<ShengjiSession, "id"> = $derived({
+        seasonId: "bmkOnqItvr9dSgbyubFX",
+        date: date,
+        players: playing,
+        games: games,
+    });
 
     // Convert input string back to Date object
     $effect(() => {
@@ -109,97 +57,11 @@
         {/each}
     </div>
 
-    <table class="border border-black">
-        <thead>
-            <tr>
-                {#if playing.length !== 0}
-                    <td class="border border-black px-4 py-2"></td>
-                {/if}
+    <GameTable {playing} {playerMap} {playerStateMap} {games} />
 
-                {#each playing as playerId}
-                    <th class="border border-black px-4 py-2"
-                        >{playerMap[playerId].name}</th
-                    >
-                {/each}
-
-                {#if playing.length !== 0}
-                    <td class="border border-black px-4 py-2"></td>
-                {/if}
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                {#if playing.length !== 0}
-                    <td class="border border-black px-4 py-2"></td>
-                {/if}
-
-                {#each playing as playerId}
-                    <td
-                        class="border border-black px-4 py-2 {playerStateMap[
-                            playerId
-                        ].onStage
-                            ? 'underline'
-                            : ''}"
-                    >
-                        {playerStateMap[playerId].rank}
-                    </td>
-                {/each}
-
-                {#if playing.length !== 0}
-                    <td class="border border-black px-4 py-2"></td>
-                {/if}
-            </tr>
-
-            {#each games as game (game.gameNum)}
-                <tr>
-                    <td class="border border-black px-4 py-2"
-                        >Game {game.gameNum}</td
-                    >
-
-                    {#each Object.keys(game.stateAfter) as playerId}
-                        <td
-                            class="border border-black px-4 py-2 {game
-                                .stateAfter[playerId].onStage
-                                ? 'underline'
-                                : ''}">{game.stateAfter[playerId].rank}</td
-                        >
-                    {/each}
-
-                    <td class="border border-black px-4 py-2"></td>
-                </tr>
-            {/each}
-
-            {#if currentGame !== null}
-                <tr>
-                    <td class="border border-black px-4 py-2">
-                        <button onclick={addGame}>&plus;</button>
-                    </td>
-
-                    {#each playing as playerId}
-                        <td class="border border-black px-4 py-2">
-                            <label for="">Won</label>
-                            <input
-                                type="checkbox"
-                                name=""
-                                id=""
-                                value={playerId}
-                                bind:group={currentGame.winningTeam}
-                            />
-                        </td>
-                    {/each}
-
-                    <td>
-                        <label for="">Win Tier</label>
-                        <select name="" id="" bind:value={currentGame.winTier}>
-                            <option value={1}>1</option>
-                            <option value={2}>2</option>
-                            <option value={3}>3</option>
-                        </select>
-                    </td>
-                </tr>
-            {/if}
-        </tbody>
-    </table>
-
-    <button type="submit" onclick={uploadSession}>SUBMIT!</button>
+    <button
+        type="submit"
+        onclick={() => (games.length > 0 ? createSession(session) : null)}
+        >SUBMIT!</button
+    >
 </div>

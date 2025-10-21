@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { PlayerState } from "$lib/types";
+    import { rankToString } from "$lib/utils/rankCalculation";
 
     let { name, state }: { name: string; state: PlayerState } = $props();
 </script>
@@ -13,7 +14,7 @@
         class="font-macondo text-8xl p-6 self-center
         {state.onStage ? 'underline' : ''}"
     >
-        {state.rank}
+        {rankToString(state.rank)}
     </p>
     <p class="text-l self-end rotate-180">{name}</p>
 </div>
