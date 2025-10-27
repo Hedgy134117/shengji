@@ -2,7 +2,7 @@
     <div class="max-w mx-auto">
         <div class="flex justify-between items-center">
             <div class="flex space-x-8">
-                <a href="/" class="flex items-center py-4 px-4"> Homepage </a>
+                <a href="/" class="flex items-center py-4 px-2"> Homepage </a>
                 <a href="/shengji" class="flex items-center py-4 px-2">
                     Shengji
                 </a>

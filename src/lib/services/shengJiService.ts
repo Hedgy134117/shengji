@@ -1,17 +1,33 @@
 import { db } from "$lib/firebase/client";
-import type { Player, PlayerState, ShengjiGame, ShengjiSession } from "$lib/types";
+import type {
+    Player,
+    PlayerState,
+    ShengjiGame,
+    ShengjiSession,
+} from "$lib/types";
 import { advanceRank } from "$lib/utils/rankCalculation";
-import { addDoc, collection, getDocs, limit, orderBy, query, Timestamp, where } from "firebase/firestore";
+import {
+    addDoc,
+    collection,
+    getDocs,
+    limit,
+    orderBy,
+    query,
+    Timestamp,
+    where,
+} from "firebase/firestore";
 
 const COLLECTION = "shengji-sessions";
 
-function cloneStateMap(state: Record<string, PlayerState>): Record<string, PlayerState> {
+function cloneStateMap(
+    state: Record<string, PlayerState>
+): Record<string, PlayerState> {
     const newState: Record<string, PlayerState> = {};
     for (let playerId in state) {
         newState[playerId] = {
             rank: state[playerId].rank,
             onStage: state[playerId].onStage,
-            prestige: state[playerId].prestige
+            prestige: state[playerId].prestige,
         };
     }
     return newState;
@@ -29,7 +45,10 @@ export function calculateNewState(
 
     for (const playerId of winningTeam) {
         const player = newState[playerId];
-        const advanced = advanceRank(player.rank, player.onStage ? rankGain : offStageGain);
+        const advanced = advanceRank(
+            player.rank,
+            player.onStage ? rankGain : offStageGain
+        );
         player.onStage = true;
         player.rank = advanced.rank;
         player.prestige = advanced.prestige;
@@ -51,26 +70,34 @@ export async function getAllSessions(): Promise<ShengjiSession[]> {
         sessions.push({
             ...data,
             id: doc.id,
-            date: (data.date as Timestamp).toDate()
+            date: (data.date as Timestamp).toDate(),
         } as ShengjiSession);
     }
 
-    return sessions
+    return sessions;
+}
+
+export function getPlayerSessions(
+    playerId: string,
+    sessions: ShengjiSession[]
+): ShengjiSession[] {
+    return sessions.filter((session) => session.players.includes(playerId));
 }
 
 function getNewPlayerState(): PlayerState {
     return {
         rank: 2,
         onStage: true,
-        prestige: 0
+        prestige: 0,
     } as PlayerState;
 }
 
-export async function getAllPlayerStates(playerMap: Record<string, Player>): Promise<Record<string, PlayerState>> {
-    const docRef = await getDocs(query(
-        collection(db, COLLECTION),
-        orderBy("date", "desc"),
-    ));
+export async function getAllPlayerStates(
+    playerMap: Record<string, Player>
+): Promise<Record<string, PlayerState>> {
+    const docRef = await getDocs(
+        query(collection(db, COLLECTION), orderBy("date", "desc"))
+    );
 
     const states: Record<string, PlayerState> = {};
     for (const doc of docRef.docs) {
@@ -94,12 +121,14 @@ export async function getAllPlayerStates(playerMap: Record<string, Player>): Pro
 }
 
 export async function getPlayerState(playerId: string): Promise<PlayerState> {
-    const docRef = await getDocs(query(
-        collection(db, COLLECTION),
-        where("players", "array-contains", playerId),
-        orderBy("date", "desc"),
-        limit(1)
-    ));
+    const docRef = await getDocs(
+        query(
+            collection(db, COLLECTION),
+            where("players", "array-contains", playerId),
+            orderBy("date", "desc"),
+            limit(1)
+        )
+    );
 
     if (docRef.empty) {
         return { rank: 2, onStage: true, prestige: 0 };
