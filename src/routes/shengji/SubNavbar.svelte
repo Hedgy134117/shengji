@@ -1,4 +1,4 @@
-<nav class="border-b">
+<nav class="border-b bg-zinc-800">
     <div class="max-w mx-auto">
         <div class="flex justify-between items-center">
             <div class="flex space-x-8">

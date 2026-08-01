@@ -34,6 +34,21 @@
             date = new Date(dateString);
         }
     });
+
+    let submitText = $state("SUBMIT!");
+
+    function submit() {
+        if (games.length === 0) {
+            return;
+        }
+
+        createSession(session);
+
+        submitText = "submitted :)";
+        setTimeout(() => {
+            submitText = "SUBMIT!";
+        }, 1000);
+    }
 </script>
 
 <div class="p-2">
@@ -82,7 +97,8 @@
 
     <button
         type="submit"
-        onclick={() => (games.length > 0 ? createSession(session) : null)}
-        class:hidden={playing.length === 0}>SUBMIT!</button
+        onclick={submit}
+        class="w-full p-4 border border-zinc-50 mt-4 cursor-pointer"
+        class:hidden={playing.length === 0}>{submitText}</button
     >
 </div>
